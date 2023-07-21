@@ -100,17 +100,15 @@ router.post(
 );
 // Route:3
 // Get logged in information
-router.post('/getuser',fetchuser,async (req,res)=>{
-
+router.post("/getuser", fetchuser, async (req, res) => {
   try {
-    let userId=req.user.id
-    const user =await User.findById(userId).select("-password")
-res.send(user)
-    
+    let userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    res.send(user);
   } catch (error) {
     console.error(error.message);
-      res.status(500).send("Internal Server  error occured.");
+    res.status(500).send("Internal Server  error occured.");
   }
-})
+});
 
 module.exports = router;

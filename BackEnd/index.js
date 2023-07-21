@@ -2,7 +2,7 @@ const connectToDb = require("./db");
 const express = require("express");
 const app = express();
 const port = 5000;
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 app.use(express.json());
 
 // Routes
