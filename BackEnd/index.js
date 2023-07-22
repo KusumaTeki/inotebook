@@ -15,5 +15,5 @@ app.get("/", function (req, res) {
 });
 
 app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+  console.log(`INotebook at http://localhost:${port}`);
 });
