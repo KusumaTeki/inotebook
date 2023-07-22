@@ -12,7 +12,7 @@ export default function Notes() {
       <div className="row my-3">
         <h2>Your Notes</h2>
         {notes.map((note) => {
-          return <Notesitem note={note}/>
+          return <Notesitem key={note._id} note={note}/>
         })}
       </div>
     </>

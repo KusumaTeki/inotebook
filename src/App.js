@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar";
 import Home from "./components/Home";
 import About from "./components/About";
 import NoteSate from "./context/notes/NoteState";
+import Alert from "./components/Alert";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <NoteSate>
         <Router>
           <NavBar />
+          <Alert message="Nice" />
           <div className="container">
           <Routes>
             <Route element={<Home />} path="/" />
