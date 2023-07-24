@@ -1,26 +1,40 @@
-import React from "react";
+import React,{useContext} from "react";
+import NoteContext from "../context/notes/NoteContext";
 
 export default function Notesitem(props) {
   const { note } = props;
+  const context = useContext(NoteContext);
+  const { deleteNote } = context;
+
   return (
     <>
-      <div className="col my-3 ">
-        <div className="card my-3 px-3 py-3">
-          <div className="card-body ">
+      <div className="col-md-3 mx-3 my-3">
+        <div className="card">
+          <div className="card-header">
             <div className="d-flex">
-              <div className="p-2 flex-grow-1 ">
-                <h5 className="card-title">{note.title}</h5>
+              <div className="p-2 w-100">
+                <strong>{note.title}</strong>
               </div>
-              <div className="p-2  ">
-                <i className="fa-regular fa-pen-to-square "></i>
+              <div className="p-2 flex-shrink-1">
+                <i className="fa-regular fa-pen-to-square"></i>
               </div>
-              <div className="p-2  ">
-                <i className="fa-solid fa-trash "></i>
+              <div className="p-2 flex-shrink-1">
+                <i className="fa-solid fa-trash" onClick={()=> deleteNote(note._id)}></i>
               </div>
             </div>
-            {/* <FontAwesomeIcon icon="fa-light fa-pen-to-square" /> */}
           </div>
-          <p className="card-text">{note.description}</p>
+
+          <div className="card-body">
+            <blockquote className="blockquote mb-0">
+              <p>{note.description}</p>
+            </blockquote>
+            
+          </div>
+          {/* <div className="card-footer d-flex">
+          <i className="fa-solid fa-tag"></i>
+          <p className=" mx-4 " >{note.tag}</p>
+          </div> */}
+
         </div>
       </div>
     </>
