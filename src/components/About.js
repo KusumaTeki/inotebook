@@ -3,8 +3,8 @@ import React from "react";
 export default function About() {
  
   return (
-    <div>
-      This is about 
+    <div className="container my-3 ">
+      This is About 
     </div>
   );
 }
