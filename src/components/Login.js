@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
-let navigate =   useNavigate()
+  let navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await fetch("http://localhost:5000/api/auth/login", {
@@ -22,9 +22,8 @@ let navigate =   useNavigate()
     console.log(json);
     if (json.success) {
       //Save the authtoken & redirect
-      localStorage.setItem('token', json.authtoken);
-      navigate("/")
-    
+      localStorage.setItem("token", json.authtoken);
+      navigate("/");
     } else {
       alert("Invalid Credentials!! Try Again");
     }
