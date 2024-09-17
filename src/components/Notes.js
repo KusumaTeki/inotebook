@@ -4,7 +4,7 @@ import NoteContext from "../context/notes/NoteContext";
 import Notesitem from "./Notesitem";
 import Addnote from "./Addnote";
 
-const Notes = () => {
+const Notes = (props) => {
   const context = useContext(NoteContext);
   const { notes, getAllNotes, editNote } = context;
   useEffect(() => {
@@ -20,6 +20,7 @@ const Notes = () => {
       edescription: currentNote.description,
       etag: currentNote.tag,
     });
+    // props.showAlert("Updated Successfully!!!", "success");
   };
 
   const [note, setNote] = useState({
@@ -37,17 +38,19 @@ const Notes = () => {
     ref.current.click();
     editNote(note.id, note.etitle, note.edescription, note.etag);
     e.preventDefault();
+    props.showAlert("Updated Note Successfully!!!", "success");
   };
   return (
     <>
-      <Addnote />
+      <Addnote showAlert={props.showAlert} />
 
       <button
         ref={ref}
         type="button"
         className="btn btn-primary d-none"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal">
+        data-bs-target="#exampleModal"
+      >
         Launch demo modal
       </button>
 
@@ -56,7 +59,8 @@ const Notes = () => {
         id="exampleModal"
         tabIndex="-1"
         aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+        aria-hidden="true"
+      >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -67,7 +71,8 @@ const Notes = () => {
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
-                aria-label="Close"></button>
+                aria-label="Close"
+              ></button>
             </div>
             <div className="modal-body">
               <form className="container">
@@ -83,7 +88,8 @@ const Notes = () => {
                     value={note.etitle}
                     placeholder="Add your title "
                     onChange={handleOnchange}
-                    minLength={3} required
+                    minLength={3}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -97,8 +103,10 @@ const Notes = () => {
                     value={note.edescription}
                     rows="3"
                     onChange={handleOnchange}
-                    minLength={5} required
-                    placeholder="Add description"></textarea>
+                    minLength={5}
+                    required
+                    placeholder="Add description"
+                  ></textarea>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="tag" className="form-label">
@@ -111,7 +119,8 @@ const Notes = () => {
                     name="etag"
                     value={note.etag}
                     onChange={handleOnchange}
-                    minLength={5} required
+                    minLength={5}
+                    required
                     placeholder="Add a Tag. "
                   />
                 </div>
@@ -120,16 +129,20 @@ const Notes = () => {
             <div className="modal-footer">
               <button
                 ref={refClose}
-                disabled= {note.etitle.length===0 || note.edescription.length===0  }
+                disabled={
+                  note.etitle.length === 0 || note.edescription.length === 0
+                }
                 type="button"
                 className="btn btn-secondary"
-                data-bs-dismiss="modal">
+                data-bs-dismiss="modal"
+              >
                 Close
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={handleClick}>
+                onClick={handleClick}
+              >
                 Update the note
               </button>
             </div>
@@ -144,7 +157,7 @@ const Notes = () => {
         </div>
         {notes.map((note) => {
           return (
-            <Notesitem key={note._id} note={note} updateNote={updateNote} />
+            <Notesitem key={note._id} note={note} updateNote={updateNote}  showAlert={props.showAlert} />
           );
         })}
       </div>

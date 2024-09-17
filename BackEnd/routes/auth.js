@@ -107,14 +107,14 @@ router.post(
   }
 );
 // Route:3
-// Get logged in information
+// Get logged-in user information
 router.post("/getuser", fetchuser, async (req, res) => {
   let success = false;
   try {
     let userId = req.user.id;
     const user = await User.findById(userId).select("-password");
     success = true;
-    res.send(success, user);
+    res.status(200).send({success, user});
   } catch (error) {
     console.error(error.message);
     res.status(500).send(success, "Internal Server  error occured.");

@@ -19,13 +19,18 @@ export default function Notesitem(props) {
                 <i
                   className="fa-regular fa-pen-to-square"
                   onClick={() => {
-                    updateNote(note);
-                  }}></i>
+                    updateNote(note)
+                    
+                  }}
+                ></i>
               </div>
               <div className="p-2 flex-shrink-1">
                 <i
                   className="fa-solid fa-trash"
-                  onClick={() => deleteNote(note._id)}></i>
+                  onClick={() => {deleteNote(note._id)
+                    props.showAlert("Deleted Successfully!!!", "success");
+                  }}
+                ></i>
               </div>
             </div>
           </div>

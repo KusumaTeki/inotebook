@@ -81,17 +81,7 @@ const NoteState = (props) => {
       body: JSON.stringify({ id, title, description, tag }),
     });
     const json = response.json();
-    // it's fine working well
-    //   // Logic to edit in client
-    //   for (let index = 0; index < notes.length; index++) {
-    //     const element = notes[index];
-    //     if (element._id === id) {
-    //       element.title = title;
-    //       element.description = description;
-    //       element.tag = tag;
-    //     }
-    //   }
-    // };
+    
     // Logic to edit in client
     let newNotes = JSON.parse(JSON.stringify(notes));
     for (let index = 0; index < newNotes.length; index++) {
