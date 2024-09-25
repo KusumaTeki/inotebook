@@ -4,30 +4,60 @@ import { useNavigate } from "react-router-dom";
 const Login = (props) => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   let navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // "auth-token":
-        //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIzNWJmZWYwNGU1ZmRiYjA4NWIzIn0sImlhdCI6MTY4OTkzMTI4MX0.AdOHlfj2WqzsnLx6VaPIkhCiw6LIEpN6gtmlrZoe8oY",
-      },
-      body: JSON.stringify({
-        email: credentials.email,
-        password: credentials.password,
-      }),
+
+  const loginUser = async (credentials) => {
+    const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
     });
     const json = await response.json();
-    console.log(json);
+    
+    console.log('Response from server:', json); // Log the full response
+
     if (json.success) {
-      //Save the authtoken & redirect
-      localStorage.setItem("token", json.authtoken);
-      navigate("/");
-      props.showAlert("LoggedIn Successfully!!!", "success");
+        localStorage.setItem('token', json.authToken);
+        console.log('Token saved:', json.authToken);
+        props.showAlert("Logged In Successfully!!!", "success");
+        navigate('/')
     } else {
-      props.showAlert("Invalid Details!! Try Again","danger");
+        console.log('Login failed');
+        props.showAlert("Invalid Details!! Try Again", "danger");
     }
+};
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    loginUser(credentials);
+    // const response = await fetch("http://localhost:5000/api/auth/login", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     // "auth-token":
+    //     //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIzNWJmZWYwNGU1ZmRiYjA4NWIzIn0sImlhdCI6MTY4OTkzMTI4MX0.AdOHlfj2WqzsnLx6VaPIkhCiw6LIEpN6gtmlrZoe8oY",
+    //   },
+    //   body: JSON.stringify({
+    //     email: credentials.email,
+    //     password: credentials.password,
+    //   }),
+    // });
+    // const json = await response.json();
+    // console.log(json);
+    // if (json.success) {
+    //   //Save the authtoken & redirect
+    //   localStorage.setItem("token", json.authtoken);
+    //   console.log("Token saved: ",json.authtoken );
+    //   props.showAlert("LoggedIn Successfully!!!", "success");
+    //   navigate("/");
+    // } else {
+    //   props.showAlert("Invalid Details!! Try Again","danger");
+    // }
   };
   const handleOnchange = async (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });

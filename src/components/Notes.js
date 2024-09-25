@@ -3,13 +3,21 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import NoteContext from "../context/notes/NoteContext";
 import Notesitem from "./Notesitem";
 import Addnote from "./Addnote";
+import { useNavigate } from "react-router-dom";
 
 const Notes = (props) => {
   const context = useContext(NoteContext);
   const { notes, getAllNotes, editNote } = context;
+  let navigate = useNavigate();
   useEffect(() => {
-    getAllNotes();
-  });
+    if(localStorage.getItem('token')){
+
+      getAllNotes();
+    }
+    else{
+      navigate("/login")
+    }
+  },[navigate]);
 
   const ref = useRef("");
   const updateNote = (currentNote) => {
@@ -155,7 +163,7 @@ const Notes = (props) => {
         <div className="mx-4">
           {notes.length === 0 && "NO notes to display"}
         </div>
-        {notes.map((note) => {
+        {notes && Array.isArray(notes) &&notes.map((note) => {
           return (
             <Notesitem key={note._id} note={note} updateNote={updateNote}  showAlert={props.showAlert} />
           );

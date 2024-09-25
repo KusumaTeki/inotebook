@@ -8,19 +8,31 @@ const NoteState = (props) => {
   const [notes, setNotes] = useState(initialNotes);
   // Get All Notes
   const getAllNotes = async () => {
-    const response = await fetch(`${host}/api/notes/fetchallnotes`, {
-      method: "GET",
+    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+    if (!token) {
+      console.error("No token found, please log in again."); // Handle case where token is not found
+      return;
+    }
 
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIzNWJmZWYwNGU1ZmRiYjA4NWIzIn0sImlhdCI6MTY4OTkzMTI4MX0.AdOHlfj2WqzsnLx6VaPIkhCiw6LIEpN6gtmlrZoe8oY",
-      },
-      body: JSON.stringify(),
-    });
-    const json = await response.json();
+    try {
+      const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+        method: "GET",
 
-    setNotes(json);
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify(),
+      });
+      let json = await response.json();
+      console.log(json);
+      // json = Array.from(Object.values(json));
+      // json = Array.isArray(json) ? json :[json];
+      json = Array.from(json);
+      setNotes(json);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
   };
 
   // Add a note
@@ -31,14 +43,18 @@ const NoteState = (props) => {
 
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIzNWJmZWYwNGU1ZmRiYjA4NWIzIn0sImlhdCI6MTY4OTkzMTI4MX0.AdOHlfj2WqzsnLx6VaPIkhCiw6LIEpN6gtmlrZoe8oY",
+        "auth-token": localStorage.getItem("token"),
       },
       body: JSON.stringify({ title, description, tag }),
     });
 
     // Logic to add a  Note
     const note = await response.json();
+    console.log("Note added:", note);
+    if (!Array.isArray(notes)) {
+      console.error("Expected notes to be an arry.");
+      return;
+    }
     setNotes(notes.concat(note)); // concat is used to create an array whereas push is used to modify an array.
   };
 
@@ -50,12 +66,12 @@ const NoteState = (props) => {
 
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIzNWJmZWYwNGU1ZmRiYjA4NWIzIn0sImlhdCI6MTY4OTkzMTI4MX0.AdOHlfj2WqzsnLx6VaPIkhCiw6LIEpN6gtmlrZoe8oY",
+        "auth-token": localStorage.getItem("token"),
       },
       body: JSON.stringify(),
     });
     const json = response.json();
+    console.log(json);
 
     // Logic to delete a note
 
@@ -75,13 +91,13 @@ const NoteState = (props) => {
 
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRiOTIzNWJmZWYwNGU1ZmRiYjA4NWIzIn0sImlhdCI6MTY4OTkzMTI4MX0.AdOHlfj2WqzsnLx6VaPIkhCiw6LIEpN6gtmlrZoe8oY",
+        "auth-token": localStorage.getItem("token"),
       },
       body: JSON.stringify({ id, title, description, tag }),
     });
     const json = response.json();
-    
+    console.log(json);
+
     // Logic to edit in client
     let newNotes = JSON.parse(JSON.stringify(notes));
     for (let index = 0; index < newNotes.length; index++) {
@@ -98,7 +114,8 @@ const NoteState = (props) => {
 
   return (
     <NoteContext.Provider
-      value={{ notes, addNote, deleteNote, editNote, getAllNotes }}>
+      value={{ notes, addNote, deleteNote, editNote, getAllNotes }}
+    >
       {props.children}
     </NoteContext.Provider>
   );
