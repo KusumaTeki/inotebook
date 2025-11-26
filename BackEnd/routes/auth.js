@@ -65,6 +65,48 @@ router.post(
 // Route:2
 //Authenticating a user Login (verifying Login )'
 
+// router.post(
+//   "/login",
+//   [
+//     body("email", "Enter a valid emailId.").isEmail(),
+//     body("password", "Password cannot be blank.").exists(),
+//   ],
+//   async (req, res) => {
+//     let success = false;
+
+//     // if there are errors returns bad request and errors
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       return res.status(400).json({ success, errors: errors.array() });
+//     }
+//     const { email, password } = req.body;
+//     try {
+//       let user = await User.findOne({ email });
+//       if (!user) {
+//         res.status(400).json({ success, error: "Enter correct credentials " });
+//       }
+//       const passCompare = await bcrypt.compare(password, user.password);
+//       if (!passCompare) {
+//         res.status(400).json({ error: "Enter correct credentials " });
+//       }
+
+//       const data = {
+//         user: {
+//           id: user.id,
+//         },
+//       };
+
+//       const authToken = jwt.sign(data, JWT_SECRRET);
+//       success = true;
+//       // console.log(token);
+//       res.json({ success, authToken });
+//     } catch (error) {
+//       console.error(error.message);
+//       res.status(500).send("Internal Server  error occured.");
+//     }
+//   }
+// );
+
 router.post(
   "/login",
   [
@@ -74,20 +116,27 @@ router.post(
   async (req, res) => {
     let success = false;
 
-    // if there are errors returns bad request and errors
+    // if validation errors exist
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ success, errors: errors.array() });
     }
+
     const { email, password } = req.body;
+
     try {
       let user = await User.findOne({ email });
       if (!user) {
-        res.status(400).json({ success, error: "Enter correct credentials " });
+        return res
+          .status(400)
+          .json({ success, error: "Enter correct credentials" });
       }
+
       const passCompare = await bcrypt.compare(password, user.password);
       if (!passCompare) {
-        res.status(400).json({ error: "Enter correct credentials " });
+        return res
+          .status(400)
+          .json({ success, error: "Enter correct credentials" });
       }
 
       const data = {
@@ -98,14 +147,16 @@ router.post(
 
       const authToken = jwt.sign(data, JWT_SECRRET);
       success = true;
-      // console.log(token);
-      res.json({ success, authToken });
+
+      return res.json({ success, authToken });
     } catch (error) {
       console.error(error.message);
-      res.status(500).send("Internal Server  error occured.");
+      return res.status(500).send("Internal Server error occured.");
     }
   }
 );
+
+
 // Route:3
 // Get logged-in user information
 router.post("/getuser", fetchuser, async (req, res) => {

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import NoteContext from "../context/notes/NoteContext";
 
 const Signup = (props) => {
+  const context = useContext(NoteContext);
+  const { getAllNotes } = context;
   let navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     name: "",
@@ -15,7 +18,11 @@ const Signup = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password } = credentials;
+    const { name, email, password, cpassword } = credentials;
+    if (password !== cpassword) {
+      props.showAlert("Passwords do not match!", "danger");
+      return;
+    }
     const response = await fetch("http://localhost:5000/api/auth/createuser", {
       method: "POST",
       headers: {
@@ -28,6 +35,7 @@ const Signup = (props) => {
     if (json.success) {
       //Save the authtoken & redirect
       localStorage.setItem("token", json.authtoken);
+      await getAllNotes();
       navigate("/");
       props.showAlert("Account Created  Successfully!!!", "success");
     } else {
